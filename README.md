@@ -35,22 +35,21 @@ ls data/
 
 ### 조직 구조 (2개)
 - `00_organization_structure.csv` - 부서 간 위계 (3본부 10팀)
-- `00_reporting_lines.csv` - 전체 보고 라인 (대표→본부장→팀장→팀원)
+- `01_reporting_lines.csv` - 전체 보고 라인 (대표→본부장→팀장→팀원)
 
 ### 마스터 데이터 (4개)
-- `01_hr_metrics_definition.csv` - 평가 지표 사전
-- `02_employee_info.csv` - 직원 기본 정보
-- `03_job_history.csv` - 경력 이력
-- `04_personal_traits.csv` - Big-5 성격 검사
+- `02_hr_metrics_definition.csv` - **통합 지표 사전** (80개 지표)
+- `03_employee_info.csv` - 직원 기본 정보
+- `04_job_history.csv` - 경력 이력 (현실적 승진 과정)
+- `05_personal_traits.csv` - Big-5 성격 검사
 
-### 채용/교육 (7개) ⭐ **채용 전형 검사 추가**
-- `05_recruitment_history.csv` - 채용 이력
-- `05_recruitment_test_definitions.csv` - **검사 메타데이터**
-- `05_recruitment_aptitude_results.csv` - **적성검사 결과**
-- `05_recruitment_cpi_results.csv` - **CPI 성격검사 결과**
-- `05_recruitment_mmpi_results.csv` - **MMPI 진단검사 결과**
-- `06_onboarding_program.csv` - 온보딩
-- `07_training_history.csv` - 교육 이력
+### 채용/교육 (6개) ⭐ **채용 전형 검사 추가**
+- `06_recruitment_history.csv` - 채용 이력
+- `07_recruitment_aptitude_results.csv` - **적성검사 결과**
+- `08_recruitment_cpi_results.csv` - **CPI 성격검사 결과**
+- `09_recruitment_mmpi_results.csv` - **MMPI 진단검사 결과**
+- `10_onboarding_program.csv` - 온보딩
+- `11_training_history.csv` - 교육 이력
 
 ### 프로젝트/성과 (4개)
 - `08_project_history.csv` - 프로젝트 이력

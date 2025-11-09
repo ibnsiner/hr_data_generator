@@ -1,12 +1,12 @@
 # GDB-HR 프로젝트 데이터 명세서
 
-**버전**: 2.2  
+**버전**: 2.3  
 **생성일**: 2024년  
 **총 파일 수**: 25개  
-**총 직원 수**: 200명 (재직자 약 180명, 핵심인재 약 30-40명)  
+**총 직원 수**: 210명 (재직자 약 195명, 퇴사자 15명)  
 **조직 구조**: 3단계 위계 (대표 → 본부장 → 팀장 → 팀원)  
 **데이터 기간**: 2015년 ~ 2024년  
-**신규 추가**: 채용 전형 검사 데이터 (CPI, MMPI, 적성검사)  
+**주요 특징**: 채용 전형 검사 + 통합 메타데이터 + 현실적 승진 이력  
 
 ---
 
@@ -35,54 +35,60 @@
 
 ## 파일 목록
 
-| 번호 | 파일명 | 설명 | 레코드 수 (예상) |
-|------|--------|------|------------------|
+| 번호 | 파일명 | 설명 | 레코드 수 |
+|------|--------|------|----------|
 | **조직 구조** |
-| 00-1 | `organization_structure.csv` | 조직/부서 간 위계 구조 | ~14 |
-| 00-2 | `reporting_lines.csv` | 전체 보고 라인 매핑 | ~200 |
+| 00 | `organization_structure.csv` | 조직/부서 간 위계 구조 | 14 |
+| 01 | `reporting_lines.csv` | 전체 보고 라인 매핑 | 209 |
 | **마스터 데이터** |
-| 01 | `hr_metrics_definition.csv` | 평가 지표 사전 | ~25 |
-| 02 | `employee_info.csv` | 직원 기본 정보 (3단계 위계) | 200 |
-| 03 | `job_history.csv` | 직원 경력 경로 | ~400 |
-| 04 | `personal_traits.csv` | Big-5 성격 검사 | ~180 |
-| 05 | `recruitment_history.csv` | 채용 이력 | ~200 |
-| 05-1 | `recruitment_test_definitions.csv` | 채용 검사 메타데이터 | ~50 |
-| 05-2 | `recruitment_aptitude_results.csv` | 적성검사 결과 | ~200 |
-| 05-3 | `recruitment_cpi_results.csv` | CPI 성격검사 결과 | ~200 |
-| 05-4 | `recruitment_mmpi_results.csv` | MMPI 진단검사 결과 | ~200 |
-| 06 | `onboarding_program.csv` | 온보딩 프로그램 | ~1,000 |
-| 07 | `training_history.csv` | 교육 이력 | ~2,000 |
-| 08 | `project_history.csv` | 프로젝트 이력 | ~1,500 |
-| 09 | `performance_review.csv` | 반기별 성과 평가 | ~1,500 |
-| 09-1 | `continuous_performance_review.csv` | 수시 성과 평가 | ~2,000 |
-| 09-2 | `goal_management.csv` | 목표 관리 (OKR/MBO) | ~3,000 |
-| 09-3 | `exit_interview.csv` | 퇴사자 인터뷰 | ~20 |
-| 09-4 | `team_culture_survey.csv` | 팀별 조직문화 서베이 | ~360 |
-| 09-5 | `rewards_and_discipline.csv` | 포상/징계 이력 | ~200 |
-| 09-6 | `one_on_one_meetings.csv` | 1:1 미팅 기록 | ~4,000 |
+| 02 | `hr_metrics_definition.csv` | **통합 지표 사전** (80개 지표) | 80 |
+| 03 | `employee_info.csv` | 직원 기본 정보 (3단계 위계) | 210 |
+| 04 | `job_history.csv` | 직원 경력 경로 (승진 이력) | 527 |
+| 05 | `personal_traits.csv` | Big-5 성격 검사 | 195 |
+| **채용/교육** |
+| 06 | `recruitment_history.csv` | 채용 이력 | 206 |
+| 07 | `recruitment_aptitude_results.csv` | **적성검사 결과** | 210 |
+| 08 | `recruitment_cpi_results.csv` | **CPI 성격검사 결과** | 210 |
+| 09 | `recruitment_mmpi_results.csv` | **MMPI 진단검사 결과** | 210 |
+| 10 | `onboarding_program.csv` | 온보딩 프로그램 | 378 |
+| 11 | `training_history.csv` | 교육 이력 | 799 |
+| **프로젝트/성과** |
+| 12 | `project_history.csv` | 프로젝트 이력 | 372 |
+| 13 | `performance_review.csv` | 반기별 성과 평가 | 857 |
+| 14 | `continuous_performance_review.csv` | 수시 성과 평가 | 1,937 |
+| 15 | `goal_management.csv` | 목표 관리 (OKR/MBO) | 6,099 |
+| **조직 문화/퇴사** |
+| 16 | `exit_interview.csv` | 퇴사자 인터뷰 | 15 |
+| 17 | `team_culture_survey.csv` | 팀별 조직문화 서베이 | 376 |
+| 18 | `rewards_and_discipline.csv` | 포상/징계 이력 | 68 |
+| 19 | `one_on_one_meetings.csv` | 1:1 미팅 기록 | 6,414 |
 | **평가/보상** |
-| 10 | `skill_assessment.csv` | 역량 진단 | ~1,500 |
-| 11 | `leadership_360_review.csv` | 리더십 360도 평가 | ~1,000 |
-| 12 | `engagement_survey.csv` | 조직 몰입도 설문 | ~500 |
-| 13 | `compensation_history.csv` | 보상 이력 | ~1,500 |
+| 20 | `skill_assessment.csv` | 역량 진단 | 1,560 |
+| 21 | `leadership_360_review.csv` | 리더십 360도 평가 | 1,449 |
+| 22 | `engagement_survey.csv` | 조직 몰입도 설문 | 537 |
+| 23 | `compensation_history.csv` | 보상 이력 | 1,141 |
 | **인재 관리** |
-| 14 | `key_talent_pool.csv` | 핵심인재 풀 (성과 기반) | ~40 |
-| 15 | `succession_plan.csv` | 승계 계획 | ~30 |
+| 24 | `key_talent_pool.csv` | 핵심인재 풀 (성과 기반) | 4 |
+| 25 | `succession_plan.csv` | 승계 계획 | 17 |
 | **요약** |
-| 16 | `employee_yearly_snapshot.csv` | 연간 요약 | ~500 |
+| 26 | `employee_yearly_snapshot.csv` | 연간 요약 | 537 |
 
-**총 레코드 수**: 약 **21,300+** (채용 전형 검사 800+ 추가)
+**총 레코드 수**: 약 **21,300+**  
+**핵심 신규 기능**: 채용 전형 검사 (CPI, MMPI, 적성검사) + 통합 메타데이터 (80개 지표) + 현실적 승진 이력
 
 ---
 
 ## 상세 스키마
 
 **핵심 특징**:
-- ✅ 조직 위계 구조 명확히 정의 (3본부 10팀)
-- ✅ 성과 평가 → 핵심인재 → 승계 후보 논리적 연결
-- ✅ 리더십 평가와 승계 계획 연동
-- ✅ 정성 의견 생성: 조합형 문장으로 수백 가지 변형 (템플릿 반복 최소화)
-- ✅ 구체적 수치와 액션 플랜 포함 (예: "목표 125% 달성", "KPI 5건 완료")
+- ✅ **채용 전형 검사**: CPI, MMPI, 적성검사로 현실적 채용 프로세스 구현
+- ✅ **통합 메타데이터**: 80개 지표의 완전한 정의 (높을때/낮을때 특성 포함)
+- ✅ **현실적 승진 이력**: 팀장들도 하위 직급에서 점진적 승진
+- ✅ **퇴사자 특성 반영**: MMPI 우울척도 높음, CPI 안녕감 낮음
+- ✅ **직무별 차별화**: 본부별 요구 역량에 따른 적성검사 점수 차별화
+- ✅ **조직 위계 구조**: 3본부 10팀 명확한 보고 라인
+- ✅ **데이터 논리적 연결**: 성과 → 핵심인재 → 승계 후보
+- ✅ **정성 의견 풍부화**: 조합형 문장으로 수백 가지 변형
 
 ### 00-1. organization_structure.csv
 **목적**: 조직/부서 간 위계 구조 정의
@@ -147,23 +153,43 @@
 
 ---
 
-### 02. hr_metrics_definition.csv
-**목적**: 모든 평가의 기준이 되는 지표 사전
+### 02. hr_metrics_definition.csv ⭐ **통합 메타데이터**
+**목적**: 모든 평가 도구의 지표를 통합한 완전한 메타데이터 사전
 
 | 컬럼명 | 데이터 타입 | 설명 | 예시 |
 |--------|-------------|------|------|
-| `metric_code` | STRING | 지표 고유 코드 (PK) | SKILL_001, LEAD_001 |
-| `metric_name` | STRING | 지표 명칭 | 데이터 분석, 전략적 비전 제시 |
-| `tool_name` | STRING | 평가 도구명 | Competency Framework, Leadership 360 |
-| `dimension` | STRING | 평가 차원 | Technical Skill, Soft Skill, Leadership |
-| `definition` | STRING | 지표 정의 | 데이터를 수집, 분석하여 인사이트를 도출하는 능력 |
-| `measurement_scale` | STRING | 측정 척도 | 1-5점 척도, S/A/B/C/D 등급 |
+| `metric_code` | STRING | 지표 고유 코드 (PK) | SKILL_001, CPI_Do, MMPI_D, BIG5_OPENNESS |
+| `metric_name` | STRING | 지표 명칭 | 데이터 분석, 지배성, 우울증, 개방성 |
+| `tool_name` | STRING | 평가 도구명 | Competency Framework, CPI, MMPI, Big-5 성격검사 |
+| `dimension` | STRING | 평가 차원 | Technical Skill, 대인관계및자신감, 임상척도, Personality |
+| `definition` | STRING | **상세 지표 정의** | 대량의 데이터를 수집, 정제, 분석하여... |
+| `measurement_scale` | STRING | 측정 척도 | 1-5점 척도, T점수 (20-80), 0-100점 척도 |
+| `high_score_characteristics` | STRING | **높은 점수 특성** | 복잡한 데이터에서 핵심 인사이트 도출, 예측 모델 구축... |
+| `low_score_characteristics` | STRING | **낮은 점수 특성** | 기초적 데이터 처리만 가능, 분석 결과 해석 어려움... |
 
-**관계**: `skill_assessment`, `leadership_360_review`에서 참조
+**포함 도구 (총 80개 지표)**:
+- **Competency Framework**: 10개 (기술/소프트스킬)
+- **Leadership 360**: 7개 (리더십 역량)
+- **Performance Review**: 3개 (성과 지표)
+- **Engagement Survey**: 3개 (몰입도 지표)
+- **Big-5 성격검사**: 5개 (개방성, 성실성, 외향성, 친화성, 신경증)
+- **CPI**: 27개 (20개 일상척도 + 3개 벡터척도 + 4개 라이프스타일)
+- **MMPI**: 13개 (3개 타당도척도 + 10개 임상척도)
+- **적성검사**: 12개 (언어/수리/상황판단/사회상식/대인관계)
+
+**AI 챗봇 활용 예시**:
+```
+사용자: "김철수의 CPI 지배성 점수가 높은데 이게 뭘 의미해?"
+AI: "CPI 지배성(Do)은 리더십과 주도성을 측정하는 척도입니다. 
+높은 점수는 강한 리더십, 주도적 행동, 자신감 넘침, 결단력 등을 의미하며
+관리직이나 프로젝트 리더 역할에 적합한 특성입니다."
+```
+
+**관계**: 모든 평가 테이블에서 `metric_code`로 참조
 
 ---
 
-### 02. employee_info.csv
+### 03. employee_info.csv
 **목적**: 직원 기본 정보 (마스터 테이블, 3단계 위계 구조)
 
 | 컬럼명 | 데이터 타입 | 설명 | 예시 | 비고 |
@@ -202,7 +228,7 @@
 
 ---
 
-### 03. job_history.csv
+### 04. job_history.csv
 **목적**: 직원의 모든 경력 경로 추적 (승진, 부서 이동)
 
 | 컬럼명 | 데이터 타입 | 설명 | 예시 |
@@ -221,7 +247,7 @@
 
 ---
 
-### 04. personal_traits.csv
+### 05. personal_traits.csv
 **목적**: Big-5 성격 검사 결과
 
 | 컬럼명 | 데이터 타입 | 설명 | 범위 |
@@ -244,7 +270,7 @@
 
 ---
 
-### 05. recruitment_history.csv
+### 06. recruitment_history.csv
 **목적**: 채용 프로세스 이력
 
 | 컬럼명 | 데이터 타입 | 설명 |
@@ -263,7 +289,7 @@
 
 ---
 
-### 05-1. recruitment_test_definitions.csv
+### 07. recruitment_aptitude_results.csv
 **목적**: 채용 전형 검사의 모든 지표 메타데이터
 
 | 컬럼명 | 데이터 타입 | 설명 | 예시 |
@@ -1288,6 +1314,7 @@ ORDER BY kt.development_priority, kt.avg_performance_score DESC;
 | 2.0 | 2024 | 조직 구조 및 보고 라인 추가 (19개 파일)<br>- organization_structure.csv 추가<br>- reporting_lines.csv 추가<br>- employee_info에 org_id, division_name 추가<br>- 3단계 위계 구조 구현 (본부장 직급 추가) |
 | 2.1 | 2024 | **인재 관리 및 정성 의견 개선 (21개 파일)**<br>- key_talent_pool.csv 추가 (성과 기반 핵심인재 선정)<br>- succession_plan.csv 추가 (승계 계획)<br>- 데이터 간 논리적 연결: 성과 → 핵심인재 → 승계후보<br>- **정성 의견 대폭 개선**: 조합형 생성으로 다양성↑ 구체성↑<br>- 프로젝트, 성과평가, 팀문화, 퇴사인터뷰 피드백 풍부화 |
 | 2.2 | 2024 | **채용 전형 검사 데이터 추가 (25개 파일)**<br>- recruitment_test_definitions.csv 추가 (검사 메타데이터)<br>- recruitment_aptitude_results.csv 추가 (적성검사: 언어/수리/상황판단/사회상식/대인관계)<br>- recruitment_cpi_results.csv 추가 (CPI 성격검사: 20개 일상척도 + 벡터척도 + 라이프스타일)<br>- recruitment_mmpi_results.csv 추가 (MMPI 진단검사: 타당도척도 + 10개 임상척도)<br>- **현실적 채용 프로세스**: 지원→적성검사→인성검사→면접→합격<br>- **퇴사자 vs 재직자 비교**: 채용 시 검사 결과와 퇴사 상관관계 분석 가능<br>- **직무별 특성 반영**: 본부별 요구 역량에 따른 점수 차별화 |
+| 2.3 | 2024 | **메타데이터 통합 및 승진 이력 개선 (25개 파일)**<br>- **통합 메타데이터**: 모든 지표를 hr_metrics_definition.csv에 통합 (80개 지표)<br>- **풍부한 정의**: 각 지표별 상세 정의 + 높을때/낮을때 특성 추가<br>- **Big-5 요인 추가**: 개방성, 성실성, 외향성, 친화성, 신경증 메타데이터 포함<br>- **승진 이력 개선**: 팀장들도 하위 직급에서 시작하여 점진적 승진<br>- **파일 번호 정리**: 00-25번 순차 정렬, 중복 해결<br>- **AI 챗봇 최적화**: 단일 메타데이터 소스에서 모든 성격/역량 질문 답변 가능 |
 
 ---
 
