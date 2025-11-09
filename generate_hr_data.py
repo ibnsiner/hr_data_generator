@@ -75,11 +75,82 @@ except ImportError:
 np.random.seed(42)
 random.seed(42)
 
+# ============================================================================
+# 설정 변수 (Configuration)
+# ============================================================================
+
+CONFIG = {
+    # 조직 설정
+    'TOTAL_EMPLOYEES': 210,  # 총 직원 수 (대표 1 + 본부장 3 + 팀장 10 + 일반직원 ~196)
+    'ACTIVE_RATIO': 0.93,  # 재직자 비율 (93%)
+    'CONTRACT_RATIO': 0.05,  # 계약직 비율 (5%)
+    
+    # 데이터 생성 기간
+    'START_YEAR': 2015,
+    'END_YEAR': 2024,
+    'REVIEW_PERIODS': ['2022 H1', '2022 H2', '2023 H1', '2023 H2', '2024 H1'],
+    'SURVEY_YEARS': [2022, 2023, 2024],
+    
+    # 성과 평가 등급 분포
+    'PERFORMANCE_DISTRIBUTION': {
+        'S': 0.05,  # 5%
+        'A': 0.25,  # 25%
+        'B': 0.50,  # 50%
+        'C': 0.15,  # 15%
+        'D': 0.05   # 5%
+    },
+    
+    # 검사 점수 설정
+    'T_SCORE': {'mean': 50, 'std': 10, 'min': 20, 'max': 80},  # CPI, MMPI
+    'APTITUDE_SCORE': {'mean': 75, 'std': 12, 'min': 30, 'max': 100},  # 적성검사
+    'BIG5_SCORE': {'mean': 65, 'std': 15, 'min': 30, 'max': 100},  # Big-5
+    
+    # 퇴사자 특성 조정값
+    'LEAVER_ADJUSTMENT': {
+        'aptitude': -8,  # 적성검사 전반
+        'cpi_general': -5,  # CPI 전반
+        'cpi_wellbeing': -10,  # CPI 안녕감
+        'cpi_responsibility': -8,  # CPI 책임감
+        'mmpi_depression': 10,  # MMPI 우울증
+        'mmpi_anxiety': 8,  # MMPI 불안
+        'mmpi_general': 5  # MMPI 전반
+    },
+    
+    # 직무별 적성검사 조정값
+    'JOB_APTITUDE_ADJUSTMENT': {
+        '기술본부': {'numerical': 5, 'verbal': 0, 'situational': 3},
+        '경영지원본부': {'numerical': 2, 'verbal': 5, 'situational': 5},
+        '비즈니스본부': {'numerical': 0, 'verbal': 3, 'situational': 5}
+    },
+    
+    # 직급별 CPI 리더십 조정값
+    'LEADERSHIP_BONUS': {
+        '팀장': 8, '본부장': 8, '대표이사': 8,
+        '차장': 5, '부장': 5,
+        'default': 0
+    },
+    
+    # 핵심인재 선정 기준
+    'TALENT_TIER': {
+        'tier1_performance': 4.5,  # Tier 1: 성과 4.5 이상
+        'tier1_rewards': 2,  # + 포상 2회 이상
+        'tier1_leadership': 4.3,  # OR 리더십 4.3 이상
+        'tier2_performance': 4.0,  # Tier 2: 성과 4.0 이상
+        'tier3_performance': 3.8,  # Tier 3: 성과 3.8 이상
+        'tier3_years': 5  # + 근속 5년 이하
+    },
+    
+    # 데이터 간 상관관계 강화 설정
+    'ENABLE_CORRELATION': True,  # 상관관계 강화 기능 활성화
+    'CORRELATION_STRENGTH': 0.3  # 상관관계 강도 (0.0~1.0)
+}
+
 # 출력 디렉토리 생성
 os.makedirs('data', exist_ok=True)
 
 print("=" * 80)
 print("GDB-HR 프로젝트 데이터 생성 시작 (200명 규모 + 채용 전형 검사)")
+print(f"설정: 직원 {CONFIG['TOTAL_EMPLOYEES']}명, 재직률 {CONFIG['ACTIVE_RATIO']*100}%, 데이터 연관성 강화: {'ON' if CONFIG['ENABLE_CORRELATION'] else 'OFF'}")
 print("=" * 80)
 
 # ============================================================================
@@ -1071,10 +1142,33 @@ for emp in employees:
     numerical_logic = generate_aptitude_score(75 + division_adj['numerical_total'] + overall_adjustment)
     numerical_total = round((numerical_quantity + numerical_statistics + numerical_logic) / 3, 1)
     
-    # 기타 능력
-    situational_judgment = generate_aptitude_score(75 + division_adj['situational_judgment'] + overall_adjustment)
+    # 기타 능력 (데이터 연관성 강화)
+    if CONFIG['ENABLE_CORRELATION']:
+        # 리더급은 CPI 지배성이 높을 것으로 예측 → 상황판단능력도 약간 높게
+        predicted_dominance = generate_t_score(50 + CONFIG['LEADERSHIP_BONUS'].get(emp['job_title'], 0) + overall_adjustment)
+        dom_correlation = int((predicted_dominance - 50) * CONFIG['CORRELATION_STRENGTH'])
+        situational_judgment = generate_aptitude_score(75 + division_adj['situational_judgment'] + overall_adjustment + dom_correlation)
+        emp['_predicted_do'] = predicted_dominance
+    else:
+        situational_judgment = generate_aptitude_score(75 + division_adj['situational_judgment'] + overall_adjustment)
+    
     social_knowledge = generate_aptitude_score(75 + overall_adjustment)
-    interpersonal_skills = generate_aptitude_score(75 + overall_adjustment)
+    
+    # 대인관계능력 - CPI 사교성/공감성 예측값과 연관
+    if CONFIG['ENABLE_CORRELATION']:
+        # CPI 사교성/공감성을 미리 예측
+        predicted_sociability = generate_t_score(50 + overall_adjustment)
+        predicted_empathy = generate_t_score(50 + overall_adjustment)
+        
+        # CPI 점수를 0-100 스케일로 변환하여 적성검사에 반영
+        correlation_adjustment = int((predicted_sociability + predicted_empathy - 100) * CONFIG['CORRELATION_STRENGTH'] / 2)
+        interpersonal_skills = generate_aptitude_score(75 + overall_adjustment + correlation_adjustment)
+        
+        # 예측값 저장 (나중에 CPI 생성 시 참조하여 일관성 유지)
+        emp['_predicted_sy'] = predicted_sociability
+        emp['_predicted_em'] = predicted_empathy
+    else:
+        interpersonal_skills = generate_aptitude_score(75 + overall_adjustment)
     
     # 전체 점수
     overall_aptitude_score = round((verbal_total + numerical_total + situational_judgment + social_knowledge + interpersonal_skills) / 5, 1)
@@ -1165,14 +1259,31 @@ for emp in employees:
         leadership_bonus = 0
     
     # CPI 20개 일상척도 생성 (T점수: 평균 50, 표준편차 10)
+    # 데이터 연관성 강화: 적성검사 결과와 상관관계 구현
+    
     # 1군: 대인관계 및 자신감
-    Do = generate_t_score(50 + leadership_bonus + adjustment)  # 지배성
+    # 지배성 - 적성검사 상황판단능력과 연관
+    if CONFIG['ENABLE_CORRELATION'] and '_predicted_do' in emp:
+        do_noise = int(np.random.normal(0, 5))
+        Do = int(np.clip(emp['_predicted_do'] + do_noise, 20, 80))
+    else:
+        Do = generate_t_score(50 + leadership_bonus + adjustment)
+    
     Cs = generate_t_score(50 + leadership_bonus + adjustment)  # 지위추구성
-    Sy = generate_t_score(50 + adjustment)  # 사교성
+    
+    # 사교성/공감성 - 적성검사 대인관계능력과 연관
+    if CONFIG['ENABLE_CORRELATION'] and '_predicted_sy' in emp:
+        sy_noise = int(np.random.normal(0, 5))
+        em_noise = int(np.random.normal(0, 5))
+        Sy = int(np.clip(emp['_predicted_sy'] + sy_noise, 20, 80))
+        Em = int(np.clip(emp['_predicted_em'] + em_noise, 20, 80))
+    else:
+        Sy = generate_t_score(50 + adjustment)
+        Em = generate_t_score(50 + adjustment)
+    
     Sp = generate_t_score(50 + leadership_bonus//2 + adjustment)  # 사회적존재감
     Sa = generate_t_score(50 + adjustment)  # 자기수용
     In = generate_t_score(50 + adjustment)  # 독립성
-    Em = generate_t_score(50 + adjustment)  # 공감성
     
     # 2군: 규범 지향성 및 가치관
     Re = generate_t_score(50 + re_adjustment + adjustment)  # 책임감
@@ -1180,7 +1291,9 @@ for emp in employees:
     Sc = generate_t_score(50 + adjustment)  # 자기통제
     Gi = generate_t_score(50 + adjustment)  # 호감성
     Cm = generate_t_score(50 + adjustment)  # 공동체성
+    # 안녕감 - 나중에 MMPI 우울증과 역상관 (미리 값 생성 후 MMPI에서 참조)
     Wb = generate_t_score(50 + wb_adjustment + adjustment)  # 안녕감
+    emp['_cpi_wellbeing'] = Wb  # MMPI 우울증 생성 시 참조
     To = generate_t_score(50 + adjustment)  # 관용성
     
     # 3군: 성취 잠재력 및 지적 효율성
@@ -1300,8 +1413,17 @@ for emp in employees:
         validity_status = 'VALID'
     
     # 임상 척도 (T점수: 평균 50, 표준편차 10, 70 이상 시 임상적 주의)
+    # 데이터 연관성 강화: CPI 안녕감과 역상관
+    if CONFIG['ENABLE_CORRELATION'] and '_cpi_wellbeing' in emp:
+        # CPI 안녕감이 낮으면 MMPI 우울증이 높아야 함 (역상관)
+        cpi_wb = emp['_cpi_wellbeing']
+        # Wb가 50보다 낮으면 D를 높게, Wb가 50보다 높으면 D를 낮게
+        wb_correlation = int((50 - cpi_wb) * CONFIG['CORRELATION_STRENGTH'])
+        D = generate_t_score(50 + depression_adj + adjustment_adj + wb_correlation)  # 우울증 (연관성 반영)
+    else:
+        D = generate_t_score(50 + depression_adj + adjustment_adj)  # 우울증
+    
     Hs = generate_t_score(50 + adjustment_adj)  # 건강염려증
-    D = generate_t_score(50 + depression_adj + adjustment_adj)  # 우울증
     Hy = generate_t_score(50 + adjustment_adj)  # 히스테리
     Pd = generate_t_score(50 + adjustment_adj)  # 반사회성
     Mf = generate_t_score(50)  # 남성성-여성성
@@ -1309,7 +1431,15 @@ for emp in employees:
     Pt = generate_t_score(50 + anxiety_adj + adjustment_adj)  # 강박증
     Sc = generate_t_score(50 + adjustment_adj)  # 정신분열병
     Ma = generate_t_score(50)  # 경조증
-    Si = generate_t_score(50 + adjustment_adj)  # 사회적내향성
+    
+    # 사회적내향성 - CPI 사교성과 역상관
+    if CONFIG['ENABLE_CORRELATION'] and '_predicted_sy' in emp:
+        # CPI 사교성(Sy)이 높으면 MMPI 사회적내향성(Si)은 낮아야 함
+        sy_value = emp['_predicted_sy']
+        si_correlation = int((50 - sy_value) * CONFIG['CORRELATION_STRENGTH'])
+        Si = generate_t_score(50 + adjustment_adj + si_correlation)
+    else:
+        Si = generate_t_score(50 + adjustment_adj)  # 사회적내향성
     
     # 임상 척도 상승 개수 (70T 이상)
     clinical_scales = [Hs, D, Hy, Pd, Pa, Pt, Sc, Ma, Si]

@@ -1,5 +1,5 @@
 ﻿talent_id,employee_id,identification_date,talent_tier,avg_performance_score,leadership_score,rewards_count,selection_reason,retention_risk,development_priority,succession_ready,review_date
-TALENT0001,TL010,2024-06-30,Tier 2 - High Potential,4.0,3.34,0,안정적 우수 성과,Medium,우선,Yes,2024-12-31
-TALENT0002,EMP035,2024-06-30,Tier 2 - High Potential,4.0,,2,안정적 우수 성과 | 포상 이력,Low,우선,Yes,2024-12-31
+TALENT0001,TL010,2024-06-30,Tier 2 - High Potential,4.0,3.91,0,안정적 우수 성과,Low,우선,Yes,2024-12-31
+TALENT0002,EMP035,2024-06-30,Tier 2 - High Potential,4.0,,2,안정적 우수 성과 | 포상 이력,Medium,우선,Yes,2024-12-31
 TALENT0003,EMP074,2024-06-30,Tier 2 - High Potential,4.0,,0,안정적 우수 성과,Medium,우선,Yes,2024-12-31
-TALENT0004,EMP195,2024-06-30,Tier 2 - High Potential,4.0,,2,안정적 우수 성과 | 포상 이력,Low,우선,Yes,2024-12-31
+TALENT0004,EMP195,2024-06-30,Tier 2 - High Potential,4.0,,2,안정적 우수 성과 | 포상 이력,Medium,우선,Yes,2024-12-31

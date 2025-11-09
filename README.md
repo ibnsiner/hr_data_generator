@@ -44,37 +44,48 @@ ls data/
 - `05_personal_traits.csv` - Big-5 성격 검사
 
 ### 채용/교육 (6개) ⭐ **채용 전형 검사 추가**
-- `06_recruitment_history.csv` - 채용 이력
+- `06_recruitment_history.csv` - 채용 이력 (지원~합격~입사 전 과정)
 - `07_recruitment_aptitude_results.csv` - **적성검사 결과**
+  - 언어적 능력 (어휘, 문장구성, 해독, 영어)
+  - 수리적 능력 (수량처리, 통계처리, 논리사고)
+  - 상황판단, 사회상식, 대인관계 능력
+  - 직무별 점수 차별화 (기술본부 수리↑, 경영지원본부 언어↑)
 - `08_recruitment_cpi_results.csv` - **CPI 성격검사 결과**
+  - 20개 일상척도 (지배성, 사교성, 책임감, 자기통제 등)
+  - 3개 벡터척도 (외향성-내향성, 규범지향-규범회의, 자아실현)
+  - 라이프스타일 유형 (Alpha, Beta, Gamma, Delta)
+  - T점수 기반, 리더급 vs 일반직원 특성 차별화
 - `09_recruitment_mmpi_results.csv` - **MMPI 진단검사 결과**
+  - 타당도 척도 (L, F, K) - 응답 신뢰성 검증
+  - 10개 임상척도 (우울, 불안, 반사회성 등)
+  - 퇴사자 특성 반영 (우울척도 65 vs 재직자 50)
 - `10_onboarding_program.csv` - 온보딩
 - `11_training_history.csv` - 교육 이력
 
 ### 프로젝트/성과 (4개)
-- `08_project_history.csv` - 프로젝트 이력
-- `09_performance_review.csv` - 반기별 성과 평가
-- `10_continuous_performance_review.csv` - 수시 성과평가 (자기/상사 타임스탬프)
-- `11_goal_management.csv` - 목표 관리 (OKR/MBO)
+- `12_project_history.csv` - 프로젝트 이력
+- `13_performance_review.csv` - 반기별 성과 평가
+- `14_continuous_performance_review.csv` - 수시 성과평가 (자기/상사 타임스탬프)
+- `15_goal_management.csv` - 목표 관리 (OKR/MBO)
 
 ### 조직 문화/퇴사 (4개)
-- `12_exit_interview.csv` - 퇴사자 인터뷰
-- `13_team_culture_survey.csv` - 팀별 조직문화 (정성+정량)
-- `14_rewards_and_discipline.csv` - 포상/징계
-- `15_one_on_one_meetings.csv` - 1:1 미팅
+- `16_exit_interview.csv` - 퇴사자 인터뷰
+- `17_team_culture_survey.csv` - 팀별 조직문화 (정성+정량)
+- `18_rewards_and_discipline.csv` - 포상/징계
+- `19_one_on_one_meetings.csv` - 1:1 미팅
 
 ### 평가/보상 (4개)
-- `16_skill_assessment.csv` - 역량 진단 (다면평가)
-- `17_leadership_360_review.csv` - 리더십 360도
-- `18_engagement_survey.csv` - 조직 몰입도
-- `19_compensation_history.csv` - 보상 이력
+- `20_skill_assessment.csv` - 역량 진단 (다면평가)
+- `21_leadership_360_review.csv` - 리더십 360도
+- `22_engagement_survey.csv` - 조직 몰입도
+- `23_compensation_history.csv` - 보상 이력
 
-### 인재 관리 (2개) ⭐ NEW
-- `20_key_talent_pool.csv` - **핵심인재 풀** (성과 기반 선정)
-- `21_succession_plan.csv` - **승계 계획** (후보자 매핑)
+### 인재 관리 (2개)
+- `24_key_talent_pool.csv` - **핵심인재 풀** (성과 기반 선정)
+- `25_succession_plan.csv` - **승계 계획** (후보자 매핑)
 
 ### 요약 (1개)
-- `22_employee_yearly_snapshot.csv` - 연간 스냅샷
+- `26_employee_yearly_snapshot.csv` - 연간 스냅샷
 
 ## 🎯 핵심 특징
 
