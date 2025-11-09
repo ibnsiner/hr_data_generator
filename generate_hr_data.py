@@ -142,7 +142,7 @@ CONFIG = {
     
     # 데이터 간 상관관계 강화 설정
     'ENABLE_CORRELATION': True,  # 상관관계 강화 기능 활성화
-    'CORRELATION_STRENGTH': 0.3  # 상관관계 강도 (0.0~1.0)
+    'CORRELATION_STRENGTH': 0.6  # 상관관계 강도 (0.0~1.0) - 0.6으로 상관관계 선명화
 }
 
 # 출력 디렉토리 생성
@@ -1144,9 +1144,11 @@ for emp in employees:
     
     # 기타 능력 (데이터 연관성 강화)
     if CONFIG['ENABLE_CORRELATION']:
-        # 리더급은 CPI 지배성이 높을 것으로 예측 → 상황판단능력도 약간 높게
+        # 리더급은 CPI 지배성이 높을 것으로 예측 → 상황판단능력도 높게 (강화)
         predicted_dominance = generate_t_score(50 + CONFIG['LEADERSHIP_BONUS'].get(emp['job_title'], 0) + overall_adjustment)
-        dom_correlation = int((predicted_dominance - 50) * CONFIG['CORRELATION_STRENGTH'])
+        # 지배성 정규화 및 강화된 반영
+        dom_normalized = (predicted_dominance - 50) / 30 * 25  # -25 ~ +25 범위
+        dom_correlation = int(dom_normalized * CONFIG['CORRELATION_STRENGTH'] * 1.2)  # 1.2배 강화
         situational_judgment = generate_aptitude_score(75 + division_adj['situational_judgment'] + overall_adjustment + dom_correlation)
         emp['_predicted_do'] = predicted_dominance
     else:
@@ -1154,14 +1156,18 @@ for emp in employees:
     
     social_knowledge = generate_aptitude_score(75 + overall_adjustment)
     
-    # 대인관계능력 - CPI 사교성/공감성 예측값과 연관
+    # 대인관계능력 - CPI 사교성/공감성 예측값과 연관 (강화)
     if CONFIG['ENABLE_CORRELATION']:
         # CPI 사교성/공감성을 미리 예측
         predicted_sociability = generate_t_score(50 + overall_adjustment)
         predicted_empathy = generate_t_score(50 + overall_adjustment)
         
-        # CPI 점수를 0-100 스케일로 변환하여 적성검사에 반영
-        correlation_adjustment = int((predicted_sociability + predicted_empathy - 100) * CONFIG['CORRELATION_STRENGTH'] / 2)
+        # CPI 점수를 0-100 스케일로 변환하여 적성검사에 더 강하게 반영
+        # (T점수 50±30 → 적성검사 75±25 매핑)
+        sy_normalized = (predicted_sociability - 50) / 30 * 25  # -25 ~ +25 범위
+        em_normalized = (predicted_empathy - 50) / 30 * 25
+        correlation_adjustment = int((sy_normalized + em_normalized) * CONFIG['CORRELATION_STRENGTH'])
+        
         interpersonal_skills = generate_aptitude_score(75 + overall_adjustment + correlation_adjustment)
         
         # 예측값 저장 (나중에 CPI 생성 시 참조하여 일관성 유지)
@@ -1262,19 +1268,20 @@ for emp in employees:
     # 데이터 연관성 강화: 적성검사 결과와 상관관계 구현
     
     # 1군: 대인관계 및 자신감
-    # 지배성 - 적성검사 상황판단능력과 연관
+    # 지배성 - 적성검사 상황판단능력과 연관 (노이즈 감소)
     if CONFIG['ENABLE_CORRELATION'] and '_predicted_do' in emp:
-        do_noise = int(np.random.normal(0, 5))
+        do_noise = int(np.random.normal(0, 3))  # 노이즈 감소 (5 -> 3)
         Do = int(np.clip(emp['_predicted_do'] + do_noise, 20, 80))
     else:
         Do = generate_t_score(50 + leadership_bonus + adjustment)
     
     Cs = generate_t_score(50 + leadership_bonus + adjustment)  # 지위추구성
     
-    # 사교성/공감성 - 적성검사 대인관계능력과 연관
+    # 사교성/공감성 - 적성검사 대인관계능력과 연관 (노이즈 감소로 상관관계 선명화)
     if CONFIG['ENABLE_CORRELATION'] and '_predicted_sy' in emp:
-        sy_noise = int(np.random.normal(0, 5))
-        em_noise = int(np.random.normal(0, 5))
+        # 노이즈를 줄여서 상관관계 더 명확하게 (5 -> 3)
+        sy_noise = int(np.random.normal(0, 3))
+        em_noise = int(np.random.normal(0, 3))
         Sy = int(np.clip(emp['_predicted_sy'] + sy_noise, 20, 80))
         Em = int(np.clip(emp['_predicted_em'] + em_noise, 20, 80))
     else:
@@ -1413,12 +1420,12 @@ for emp in employees:
         validity_status = 'VALID'
     
     # 임상 척도 (T점수: 평균 50, 표준편차 10, 70 이상 시 임상적 주의)
-    # 데이터 연관성 강화: CPI 안녕감과 역상관
+    # 데이터 연관성 강화: CPI 안녕감과 역상관 (더 강하게)
     if CONFIG['ENABLE_CORRELATION'] and '_cpi_wellbeing' in emp:
-        # CPI 안녕감이 낮으면 MMPI 우울증이 높아야 함 (역상관)
+        # CPI 안녕감이 낮으면 MMPI 우울증이 높아야 함 (역상관 강화)
         cpi_wb = emp['_cpi_wellbeing']
-        # Wb가 50보다 낮으면 D를 높게, Wb가 50보다 높으면 D를 낮게
-        wb_correlation = int((50 - cpi_wb) * CONFIG['CORRELATION_STRENGTH'])
+        # Wb가 50보다 낮으면 D를 높게, Wb가 50보다 높으면 D를 낮게 (반영 비율 증가)
+        wb_correlation = int((50 - cpi_wb) * CONFIG['CORRELATION_STRENGTH'] * 1.5)  # 1.5배 강화
         D = generate_t_score(50 + depression_adj + adjustment_adj + wb_correlation)  # 우울증 (연관성 반영)
     else:
         D = generate_t_score(50 + depression_adj + adjustment_adj)  # 우울증
@@ -1432,11 +1439,11 @@ for emp in employees:
     Sc = generate_t_score(50 + adjustment_adj)  # 정신분열병
     Ma = generate_t_score(50)  # 경조증
     
-    # 사회적내향성 - CPI 사교성과 역상관
+    # 사회적내향성 - CPI 사교성과 역상관 (강화)
     if CONFIG['ENABLE_CORRELATION'] and '_predicted_sy' in emp:
-        # CPI 사교성(Sy)이 높으면 MMPI 사회적내향성(Si)은 낮아야 함
+        # CPI 사교성(Sy)이 높으면 MMPI 사회적내향성(Si)은 낮아야 함 (강화)
         sy_value = emp['_predicted_sy']
-        si_correlation = int((50 - sy_value) * CONFIG['CORRELATION_STRENGTH'])
+        si_correlation = int((50 - sy_value) * CONFIG['CORRELATION_STRENGTH'] * 1.5)  # 1.5배 강화
         Si = generate_t_score(50 + adjustment_adj + si_correlation)
     else:
         Si = generate_t_score(50 + adjustment_adj)  # 사회적내향성

@@ -140,6 +140,20 @@ ls data/
 - 성과 등급 분포: S(5%), A(25%), B(50%), C(15%), D(5%)
 - Big-5 성격 점수: 평균 65, 표준편차 15
 
+### ✅ 5. 데이터 간 상관관계 ⭐ **NEW**
+검사 결과 간 현실적인 상관관계 구현:
+- **적성 대인관계 ↔ CPI 사교성/공감성**: r = 0.33~0.39 (양의 상관)
+- **적성 상황판단 ↔ CPI 지배성**: r = 0.39 (리더급 0.51)
+- **CPI 안녕감 ↔ MMPI 우울증**: r = -0.63 (역상관)
+- **CPI 사교성 ↔ MMPI 사회적내향성**: r = -0.64 (역상관)
+
+**활용 예시**:
+```python
+# 대인관계능력이 높은 사람은 CPI 사교성도 높음
+# MMPI 우울증이 높으면 CPI 안녕감이 낮음 (일관성)
+# 리더급은 CPI 지배성이 높고 상황판단능력도 우수
+```
+
 ## 💡 주요 분석 시나리오
 
 ### 1. 핵심인재 이탈 리스크
@@ -200,21 +214,27 @@ ORDER BY review_gap;
 
 ## 🔧 커스터마이징
 
-### 직원 수 변경
+### CONFIG 설정으로 쉬운 조정
 ```python
-# generate_hr_data.py 수정
-while len(employees) < 120:  # 120명으로 변경
+# generate_hr_data.py의 CONFIG 딕셔너리 수정
+
+CONFIG = {
+    'TOTAL_EMPLOYEES': 120,  # 직원 수 변경
+    'ACTIVE_RATIO': 0.95,    # 재직자 비율 조정
+    'CORRELATION_STRENGTH': 0.7,  # 상관관계 강도 (0.0~1.0)
+    'ENABLE_CORRELATION': True,   # 상관관계 ON/OFF
+    'REVIEW_PERIODS': ['2023 H1', '2023 H2', '2024 H1', '2024 H2'],
+    'TALENT_TIER': {
+        'tier1_performance': 4.3,  # 핵심인재 기준 조정
+    }
+}
 ```
 
-### 평가 기간 조정
+### 데이터 간 상관관계 강도 조정
 ```python
-review_periods = ['2023 H1', '2023 H2', '2024 H1', '2024 H2']  # 기간 추가
-```
-
-### 핵심인재 선정 기준 변경
-```python
-if avg_performance >= 4.3:  # 기준 조정
-    talent_tier = 'Tier 1 - Critical Talent'
+# 상관관계 강도 변경 (현재: 0.6)
+CONFIG['CORRELATION_STRENGTH'] = 0.8  # 더 강한 상관관계
+CONFIG['CORRELATION_STRENGTH'] = 0.3  # 더 약한 상관관계
 ```
 
 ## 📊 생성 결과 예시
