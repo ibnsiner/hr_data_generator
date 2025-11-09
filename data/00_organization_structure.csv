@@ -1,0 +1,15 @@
+﻿org_id,org_name,org_type,parent_org_id,level,head_employee_id
+ORG000,넥스트젠 테크놀로지스,Company,,0,EMP000
+ORG100,경영지원본부,Division,ORG000,1,DIV001
+ORG200,기술본부,Division,ORG000,1,DIV002
+ORG300,비즈니스본부,Division,ORG000,1,DIV003
+ORG101,HR팀,Team,ORG100,2,TL001
+ORG102,재무팀,Team,ORG100,2,TL002
+ORG201,AI솔루션개발팀,Team,ORG200,2,TL003
+ORG202,플랫폼개발팀,Team,ORG200,2,TL004
+ORG203,데이터분석팀,Team,ORG200,2,TL005
+ORG204,IT기획팀,Team,ORG200,2,TL006
+ORG205,UI/UX디자인팀,Team,ORG200,2,TL007
+ORG206,QA팀,Team,ORG200,2,TL008
+ORG301,마케팅팀,Team,ORG300,2,TL009
+ORG302,영업팀,Team,ORG300,2,TL010
